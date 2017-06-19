@@ -1,0 +1,53 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "appengine/cloudsql",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "Liv7AJyNinmP3pvwohcXp4R6xY4=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "85b1699d505667d13f8ac4478c1debbf85d6c5de",
+			"revisionTime": "2017-06-08T22:14:41Z"
+		},
+		{
+			"checksumSHA1": "Yi7+P8UCCOlHzzpWEN0U2nlGvz0=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "8fefef06da7707b5a3cda42195a6b409c9c9ab5c",
+			"revisionTime": "2017-06-16T13:16:31Z"
+		},
+		{
+			"checksumSHA1": "9SXbj96wb1PgppBZzxMIN0axbFQ=",
+			"path": "github.com/go-xorm/builder",
+			"revision": "c8871c857d2555fbfbd8524f895be5386d3d8836",
+			"revisionTime": "2017-05-19T03:21:30Z"
+		},
+		{
+			"checksumSHA1": "UUWgDjZ807fnfCFOH3120r8LsAw=",
+			"path": "github.com/go-xorm/core",
+			"revision": "e9b7412d750de4920b1c7b3ede5a98fd76d38308",
+			"revisionTime": "2017-06-14T06:05:17Z"
+		},
+		{
+			"checksumSHA1": "7pkTWwq1I1dpw/n9k05SaKrsOH0=",
+			"path": "github.com/go-xorm/xorm",
+			"revision": "2af18acf7274119e8e542d6bdab1955c80efb447",
+			"revisionTime": "2017-06-15T12:09:46Z"
+		},
+		{
+			"checksumSHA1": "zkIW+4U6XkSb5xq6E8WnFeNN0DI=",
+			"path": "github.com/namsral/flag",
+			"revision": "f522f7fa700925bcdf4ee0daf0952167618242ef",
+			"revisionTime": "2017-06-17T22:12:08Z"
+		},
+		{
+			"checksumSHA1": "rIYurTMbnyUj/eMHsaxTBnTvSnY=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "fb4cac33e3196ff7f507ab9b2d2a44b0142f5b5a",
+			"revisionTime": "2017-06-14T06:48:48Z"
+		}
+	],
+	"rootPath": "github.com/bamboox/aceStock"
+}
