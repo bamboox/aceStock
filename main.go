@@ -44,6 +44,8 @@ func StockDayRecords(client *aceHttp.HttpClient, symbol string) {
 	if err != nil { //retry
 		//
 		log.Printf("err retry %v ", symbol)
+		time.Sleep(10000 * time.Millisecond)
+		login(client)
 		StockDayRecords(client, symbol)
 	}
 	stockRecords := models.StockDayRecords{}
@@ -51,15 +53,15 @@ func StockDayRecords(client *aceHttp.HttpClient, symbol string) {
 	if err != nil {
 		log.Printf("err was %v", err)
 		log.Printf("err was %v", analysisRst)
+		time.Sleep(10000 * time.Millisecond)
+
+		login(client)
 		StockDayRecords(client, symbol)
 	}
 	log.Println(len(stockRecords.Chartlist))
 	dao.SaveStocksDayData(stockRecords.Chartlist, symbol)
 }
-func main() {
-	common.InitEngine(nil)
-	client := &aceHttp.HttpClient{}
-	client.Client = &http.Client{}
+func login(client *aceHttp.HttpClient) {
 	loginRst := client.Login("https://xueqiu.com/user/login", map[string]string{
 		"areacode":    "86",
 		"remember_me": "on",
@@ -68,27 +70,34 @@ func main() {
 	})
 	log.Printf(loginRst)
 	client.Get("https://xueqiu.com/1637386964")
+}
+func main() {
+	common.InitEngine(nil)
+	client := &aceHttp.HttpClient{}
+	client.Client = &http.Client{}
+	//login
+	login(client)
 
 	// get all stocker data
 	//	getAllStockerData(client)
 	//getAllStockerDataFormDB
 	foundModels := make([]domains.StockDomainStruct, 0)
 	dao.FindStockList(&foundModels)
-	for _, v := range foundModels {
-		StockDayRecords(client, v.Symbol)
-	}
-	//error
-	//	var foundModelsCopy []domains.StockDomainStruct
-	//	for i, v := range foundModels {
-	//		if v.Symbol == "SZ200505" {
-	//			foundModelsCopy = foundModels[i:]
-	//			break
-	//		}
-
-	//	}
-	//	for _, v := range foundModelsCopy {
+	//	for _, v := range foundModels {
 	//		StockDayRecords(client, v.Symbol)
 	//	}
+	//error
+	var foundModelsCopy []domains.StockDomainStruct
+	for i, v := range foundModels {
+		if v.Symbol == "SZ300047" {
+			foundModelsCopy = foundModels[i:]
+			break
+		}
+
+	}
+	for _, v := range foundModelsCopy {
+		StockDayRecords(client, v.Symbol)
+	}
 
 	// get StockDayRecords
 	//	StockDayRecords(client, "SH603909")
