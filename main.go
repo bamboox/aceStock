@@ -8,7 +8,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/bamboox/aceStock/common"
 	"github.com/bamboox/aceStock/dao"
-	//	"github.com/bamboox/aceStock/domains"
+	"github.com/bamboox/aceStock/domains"
 	aceHttp "github.com/bamboox/aceStock/http"
 	"github.com/bamboox/aceStock/models"
 	"github.com/bamboox/aceStock/utils"
@@ -23,28 +23,37 @@ func getAllStockerData(client *aceHttp.HttpClient) {
 
 		fetchStockRst := client.FetchStock(fetchStockTargetUrl)
 
-		log.Printf(fetchStockRst)
 		stockRecords := models.StockRecords{}
 		err := json.Unmarshal([]byte(fetchStockRst), &stockRecords)
 		if err != nil {
 			log.Printf("err was %v", err)
 		}
-		log.Println(stockRecords)
+		log.Println(len(stockRecords.Stocks))
 		dao.SaveStocks(stockRecords.Stocks)
 		time.Sleep(2000 * time.Millisecond)
 		i = i + 1
 	}
 }
 func StockDayRecords(client *aceHttp.HttpClient, symbol string) {
-	beginStr := utils.GetTimeStrByIn("1992-01-01 00:00:00")
-	endStr := utils.GetTimeStr()
-	analysisRst := client.Analysis("https://xueqiu.com/stock/forchartk/stocklist.json?symbol=" + symbol + "&period=1day&type=normal&begin=" + beginStr + "&end=" + endStr + "&_=" + utils.GetTimeStr())
-
+	beginStr := utils.GetTimeStrByIn("2010-01-01 00:00:00")
+	endStr := utils.GetTimeStrByIn("2017-06-21 00:00:00")
+	//	before normal after
+	analysisTargetUrl := "https://xueqiu.com/stock/forchartk/stocklist.json?symbol=" + symbol + "&period=1day&type=before&begin=" + beginStr + "&end=" + endStr + "&_=" + utils.GetTimeStr()
+	log.Println(symbol)
+	analysisRst, err := client.Analysis(analysisTargetUrl)
+	if err != nil { //retry
+		//
+		log.Printf("err retry %v ", symbol)
+		StockDayRecords(client, symbol)
+	}
 	stockRecords := models.StockDayRecords{}
-	err := json.Unmarshal([]byte(analysisRst), &stockRecords)
+	err = json.Unmarshal([]byte(analysisRst), &stockRecords)
 	if err != nil {
 		log.Printf("err was %v", err)
+		log.Printf("err was %v", analysisRst)
+		StockDayRecords(client, symbol)
 	}
+	log.Println(len(stockRecords.Chartlist))
 	dao.SaveStocksDayData(stockRecords.Chartlist, symbol)
 }
 func main() {
@@ -61,14 +70,26 @@ func main() {
 	client.Get("https://xueqiu.com/1637386964")
 
 	// get all stocker data
-	//getAllStockerData(client);
+	//	getAllStockerData(client)
 	//getAllStockerDataFormDB
-	//	foundModels := make([]domains.StockDomainStruct, 0)
-	//	dao.FindStockList(&foundModels)
-	//	for _, v := range foundModels {
-	//		log.Println(v)
+	foundModels := make([]domains.StockDomainStruct, 0)
+	dao.FindStockList(&foundModels)
+	for _, v := range foundModels {
+		StockDayRecords(client, v.Symbol)
+	}
+	//error
+	//	var foundModelsCopy []domains.StockDomainStruct
+	//	for i, v := range foundModels {
+	//		if v.Symbol == "SZ200505" {
+	//			foundModelsCopy = foundModels[i:]
+	//			break
+	//		}
+
+	//	}
+	//	for _, v := range foundModelsCopy {
+	//		StockDayRecords(client, v.Symbol)
 	//	}
 
 	// get StockDayRecords
-	StockDayRecords(client, "SH603909")
+	//	StockDayRecords(client, "SH603909")
 }

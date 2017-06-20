@@ -11,7 +11,7 @@ import (
 func SaveStocks(stocks []domains.StockDomainStruct) {
 	for _, v := range stocks {
 		var foundModel domains.StockDomainStruct
-		has, _ := common.Engine.Where("code=?", v.Code).Get(&foundModel)
+		has, _ := common.Engine.Where("symbol=?", v.Symbol).Get(&foundModel)
 
 		if has {
 			if _, err := common.Engine.Id(&foundModel.Id).Update(&v); err != nil {
@@ -28,7 +28,7 @@ func FindStockList(foundModelsP *[]domains.StockDomainStruct) {
 
 	//	foundModelsP := &foundModels
 	var foundModel domains.StockDomainStruct
-	rows, err := common.Engine.Rows(&foundModel)
+	rows, err := common.Engine.Desc("symbol").Rows(&foundModel)
 	if err != nil {
 		panic(err)
 	}

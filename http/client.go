@@ -25,7 +25,7 @@ func (httpClient *HttpClient) Get(url string) (result string) {
 
 	req, err := http.NewRequest("GET", url, strings.NewReader(""))
 	if err != nil {
-		return ""
+		panic(err)
 	}
 
 	//	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -34,20 +34,23 @@ func (httpClient *HttpClient) Get(url string) (result string) {
 	//		req.AddCookie(v)
 	//	}
 	resp, err := httpClient.Client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 	defer resp.Body.Close()
 	httpClient.cookies = resp.Cookies()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ""
+		panic(err)
 	}
 
 	return string(body)
 }
-func (httpClient *HttpClient) Analysis(url string) (result string) {
+func (httpClient *HttpClient) Analysis(url string) (result string, err error) {
 
 	req, err := http.NewRequest("GET", url, strings.NewReader(""))
 	if err != nil {
-		return ""
+		return "", err
 	}
 	for _, v := range httpClient.cookies {
 		req.AddCookie(v)
@@ -59,20 +62,23 @@ func (httpClient *HttpClient) Analysis(url string) (result string) {
 	req.Header.Add("Host", "xueqiu.com")
 
 	resp, err := httpClient.Client.Do(req)
+	if err != nil {
+		return "", err
+	}
 	defer resp.Body.Close()
-	httpClient.cookies = resp.Cookies()
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ""
+		return "", err
 	}
 
-	return string(body)
+	return string(body), nil
 }
 func (httpClient *HttpClient) FetchStock(url string) (result string) {
 
 	req, err := http.NewRequest("GET", url, strings.NewReader(""))
 	if err != nil {
-		return ""
+		panic(err)
 	}
 	for _, v := range httpClient.cookies {
 		req.AddCookie(v)
@@ -84,11 +90,14 @@ func (httpClient *HttpClient) FetchStock(url string) (result string) {
 	req.Header.Add("Host", "xueqiu.com")
 
 	resp, err := httpClient.Client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 	defer resp.Body.Close()
 	//	httpClient.cookies = resp.Cookies()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ""
+		panic(err)
 	}
 
 	return string(body)
@@ -106,7 +115,7 @@ func (httpClient *HttpClient) Login(urlStr string, params map[string]string) (re
 	req, err := http.NewRequest("POST", urlStr, postBody)
 	//	req, err := http.NewRequest("POST", urlStr, strings.NewReader(post_arg.Encode()))
 	if err != nil {
-		return ""
+		panic(err)
 	}
 
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")
@@ -119,13 +128,16 @@ func (httpClient *HttpClient) Login(urlStr string, params map[string]string) (re
 	//	req.Header = httpClient.header
 
 	resp, err := httpClient.Client.Do(req)
+	if err != nil {
+		panic(err)
+	}
 	defer resp.Body.Close()
 
 	httpClient.cookies = resp.Cookies()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ""
+		panic(err)
 	}
 
 	return string(body)

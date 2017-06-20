@@ -4,8 +4,8 @@ import "time"
 
 type StockDomainStruct struct {
 	Id            int64
-	Symbol        string
-	Code          string `xorm:"notnull unique"`
+	Symbol        string `xorm:"notnull unique(Symbol)"`
+	Code          string
 	Name          string
 	Current       string
 	Percent       string

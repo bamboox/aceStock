@@ -4,7 +4,7 @@ import "time"
 
 type StockDayDomainStruct struct {
 	Id       int64
-	Symbol   string    `xorm:"Varchar(10)"`
+	Symbol   string    `xorm:"Varchar(10) notnull unique(Symbol_Time)"`
 	Volume   int64     `xorm:"BigInt"`
 	Open     float64   `xorm:"Double"`
 	High     float64   `xorm:"Double"`
@@ -21,7 +21,7 @@ type StockDayDomainStruct struct {
 	Dea      float64   `xorm:"Double"`
 	Macd     float64   `xorm:"Double"`
 	Time     string    `xorm:"-"`
-	TimeUnix int64     `xorm:"notnull unique"`
+	TimeUnix int64     `xorm:"notnull unique(Symbol_Time)"`
 	TimeFmt  time.Time `xorm:"timestamp"`
 	Created  time.Time `xorm:"created timestamp 'gmt_created'"`
 }
