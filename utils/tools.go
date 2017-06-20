@@ -28,3 +28,9 @@ func StrJion(strs ...string) string {
 	}
 	return b.String()
 }
+func GetTimeStrByIn(str string) string {
+	timeLayout := "2006-01-02 15:04:05"                      //转化所需模板
+	loc, _ := time.LoadLocation("Local")                     //重要：获取时区
+	theTime, _ := time.ParseInLocation(timeLayout, str, loc) //使用模板在对应时区转化为time.time类型
+	return strconv.FormatInt(theTime.UnixNano()/1000000, 10)
+}
