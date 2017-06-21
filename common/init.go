@@ -29,11 +29,11 @@ func InitEngine(profiles []string) *xorm.Engine {
 	log.Infoln("dbdriver", dbdriver, "dsn", dsn)
 
 	if Engine, err = xorm.NewEngine(*dbdriver, *dsn); err != nil {
-		log.Errorln("err", err)
+		log.Errorln("NewEngine", err)
 	}
 
 	if err = Engine.Sync2(new(domains.StockDomainStruct), new(domains.StockDayDomainStruct)); err != nil {
-		log.Errorln("err", err)
+		log.Errorln("Sync2", err)
 	}
 
 	return Engine

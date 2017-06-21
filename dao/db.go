@@ -55,3 +55,12 @@ func SaveStocksDayData(stocksDayDatas []domains.StockDayDomainStruct, symbol str
 		}
 	}
 }
+
+func FindStockDayList(foundModelsP *[]domains.StockDayDomainStruct, symbol string, start int64, end int64) {
+
+	err := common.Engine.Where("symbol = ?", symbol).And("time_unix >= ?", start).And("time_unix <= ?", end).Find(foundModelsP)
+	if err != nil {
+		panic(err)
+	}
+
+}
